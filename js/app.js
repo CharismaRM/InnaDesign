@@ -22,31 +22,46 @@
             }));
         }
     }), 0);
-    let price = document.querySelector(".price__count");
-    let count = 0;
-    price.innerHTML = count;
+    const priceCount = document.querySelector(".price__count");
+    let totalSum = 0;
+    priceCount.innerHTML = totalSum;
     const checkboxes = document.querySelectorAll(".price__checkbox");
+    const clearBtn = document.querySelector(".price__clear");
     function updateSum() {
-        let total = 0;
-        checkboxes.forEach((checkbox => {
-            if (checkbox.checked) total += parseInt(checkbox.dataset.value);
+        let sum = 0;
+        checkboxes.forEach((cb => {
+            if (cb.checked) sum += parseInt(cb.dataset.value);
         }));
-        count = total;
-        price.innerHTML = count;
+        totalSum = sum;
+        priceCount.innerHTML = totalSum;
     }
-    checkboxes.forEach((checkbox => {
-        checkbox.addEventListener("change", updateSum);
+    checkboxes.forEach((cb => {
+        cb.addEventListener("change", updateSum);
     }));
-    function clearCheckBoxes() {
-        checkboxes.forEach((checkbox => {
-            if (checkbox.checked) checkbox.checked = false;
+    clearBtn.addEventListener("click", (() => {
+        checkboxes.forEach((cb => cb.checked = false));
+        updateSum();
+    }));
+    document.querySelectorAll(".question-icon").forEach((icon => {
+        const tooltipId = icon.getAttribute("data-tooltip-id");
+        const tooltip = document.getElementById(tooltipId);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) icon.addEventListener("click", (() => {
+            document.querySelectorAll(".tooltip").forEach((t => {
+                t.style.opacity = "0";
+                t.style.visibility = "hidden";
+                t.style.transform = "translateX(-50%) translateY(-8px)";
+            }));
+            if (tooltip.style.opacity !== "1") {
+                tooltip.style.opacity = "1";
+                tooltip.style.visibility = "visible";
+                tooltip.style.transform = "translateX(-50%) translateY(0)";
+            } else {
+                tooltip.style.opacity = "0";
+                tooltip.style.visibility = "hidden";
+                tooltip.style.transform = "translateX(-50%) translateY(-8px)";
+            }
         }));
-    }
-    const clear = document.querySelector(".price__clear");
-    clear.addEventListener("click", (function() {
-        clearCheckBoxes();
-        count = 0;
-        price.innerHTML = count;
     }));
     document.querySelectorAll(".faq__item").forEach((item => {
         item.addEventListener("click", (() => {
